@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 
 const userRouter = require('./routes/userRouter.js')
+const filmRouter = require("./routes/filmRouter");
 
 const app = express()
 
@@ -12,8 +13,11 @@ app.use(cors())
 app.use(cookieParser())
 
 app.use('/api/user', userRouter)
+app.use("/api/films", filmRouter);
 
 const PORT = process.env.PORT || 5001
 app.listen(PORT, ()=>{
     console.log(`Server is running on the port ${PORT}`)
 })
+
+
