@@ -11,4 +11,5 @@ router.post('/logout', userController.logOutUser)
 
 router.get('/all', verifyToken, userController.getAllUsers)
 router.get('/auth',verifyToken, userController.verifyAuth)
+router.put('/update', verifyToken, userController.updateUser);
 module.exports = router

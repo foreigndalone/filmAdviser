@@ -18,6 +18,21 @@ module.exports = {
             throw err
         }
     },
+    
+addUsersData: async (id, data) => {
+    try {
+        const [updatedUser] = await db("users")
+            .where({ id })
+            .update(data)
+            .returning(["id", "email", "age", "gender", "favorite_genres", "favorite_year_from", "favorite_year_to"]);
+
+        return updatedUser;
+    } catch (err) {
+        console.log("addUsersData error:", err);
+        throw err;
+    }
+},
+
     getUserByMail: async(email)=>{
         try{
             const user = await db('users').select("id", "email", "password").where({email: email.toLowerCase()}).first()

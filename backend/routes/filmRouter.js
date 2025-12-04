@@ -5,5 +5,4 @@ const router = Router();
 
 router.get("/genres/:genreId", filmController.getByGenre);
 
-
 module.exports = router;

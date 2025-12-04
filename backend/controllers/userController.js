@@ -12,6 +12,20 @@ const signUpUser = async(req, res) => {
             return res.status(409).json({ message: "User already exists" })
         }
         const user = await userModel.createUser(password, email)
+
+        const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            ACCESS_TOKEN_SECRET,
+            { expiresIn: "1d" }
+        );
+        console.log()
+
+        // ------- УСТАНАВЛИВАЕМ КУКУ -------
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000 // 1 день
+        });
         return res.status(201).json({
             message: 'User registrated successfuly',
             user
@@ -21,6 +35,28 @@ const signUpUser = async(req, res) => {
         return res.status(500).json({message: 'internal server error'})
     }
 }
+
+
+
+
+
+const updateUser = async (req, res) => {
+    try {
+        const userId = req.user.userId;  // ID берём из JWT
+        const data = req.body;
+
+        const updated = await userModel.addUsersData(userId, data);
+
+        return res.status(200).json({
+            message: "User updated",
+            updated
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "server error" });
+    }
+};
 const loginUpUser = async(req, res) => {
     const {email, password} = req.body
     try{
@@ -36,10 +72,10 @@ const loginUpUser = async(req, res) => {
         const accessToken = jwt.sign(
             {userId: user.id, email: user.email},
             ACCESS_TOKEN_SECRET,
-            {expiresIn: "60s"}
+            {expiresIn: "1d"}
         )
         res.cookie('token', accessToken, {
-            maxAge: 60 * 1000,
+            maxAge: 24 * 60 * 60 * 1000,
             httpOnly: true
         })
 
@@ -54,6 +90,9 @@ const loginUpUser = async(req, res) => {
         return res.status(500).json({ message: "server error" });
     }
 }
+
+
+
 const getAllUsers = async(req, res)=>{
     try{
         const users = await userModel.getUsers()
@@ -84,4 +123,5 @@ const verifyAuth = async(req, res)=>{
     })
 
 }
-module.exports = {signUpUser, loginUpUser, getAllUsers, logOutUser, verifyAuth}
+
+module.exports = {signUpUser, loginUpUser, getAllUsers, logOutUser, verifyAuth, updateUser}

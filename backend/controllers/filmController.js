@@ -1,7 +1,7 @@
 const {fetchTMDB} = require('../models/filmModel.js')
 
 module.exports = {
-    getByGenre: async(res, req) =>{
+    getByGenre: async(req, res) =>{
         const { genreId } = req.params; 
         try{
             const data = await fetchTMDB("/discover/movie", {
