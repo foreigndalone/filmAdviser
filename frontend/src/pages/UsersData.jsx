@@ -7,10 +7,18 @@ import { AgeInput } from '../components/InputWithLabel'
 
 import { addUsersData } from "../utilis/fetchData";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
+
+
 export const UsersData = () => {
     const [age, setAge] = useState('')
     const [gender, setGender] = useState("");
     const navigate = useNavigate();
+
+    const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.userReducer);
+    
     
 
 
@@ -21,6 +29,9 @@ export const UsersData = () => {
             prompt('Nope')
             return
         }
+        dispatch(setUserData({ age: Number(age), gender }))
+        console.log(user.age)
+
         const res = await addUsersData({
             age: Number(age),
             gender: gender
@@ -42,12 +53,22 @@ export const UsersData = () => {
   )
 }
 
+
+
+
+
+
+
+
+
 export const UsersData2 = () => {
     const [favoriteGenres, setFavoriteGenres] = useState([]);
     const [from,setFrom] = useState('')
     const [to, setTo] = useState('')
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.userReducer);
 
     const handleSubmit = async(e) => {
     e.preventDefault();
@@ -56,6 +77,14 @@ export const UsersData2 = () => {
         favorite_year_from: Number(from),
         favorite_year_to: Number(to)
     })
+
+    dispatch(setUserData({
+        favorite_genres: favoriteGenres,
+        favorite_year_from: Number(from),
+        favorite_year_to: Number(to)
+    }))
+    
+
     navigate('/main')
 }
     

@@ -13,12 +13,17 @@ export const Main = () => {
 }
 
 export  function FilmsList() {
+
   const dispatch = useDispatch();
-  const { films, loading, error } = useSelector((state) => state.films);
+  const { films, loading, error } = useSelector((state) => state.filmsReducer);
+  const favoriteGenres = useSelector((state) => state.userReducer.user.favorite_genres);
 
   useEffect(() => {
-    dispatch(fetchFilms());
-  }, []);
+    if (favoriteGenres.length > 0) {
+      dispatch(fetchFilms(favoriteGenres.join(",")));
+    }
+
+  }, [favoriteGenres]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -26,7 +31,7 @@ export  function FilmsList() {
   return (
     <ul>
       {films.map((f) => (
-        <li key={f.id}>{f.title}</li>
+        <li key={f.id}>{f.title} {f.genre_ids}</li>
       ))}
     </ul>
   );

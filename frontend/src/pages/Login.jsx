@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import {InputWithLabel, GenreRadio, AgeInput } from "../components/InputWithLabel";
-import { signUp, loginUp } from "../utilis/fetchData";
 import { Navigate, useNavigate } from "react-router";
+import { useDispatch, useSelector } from 'react-redux';
+
+
+import {InputWithLabel, GenreRadio, AgeInput } from "../components/InputWithLabel";
+
+import { signUp, loginUp } from "../utilis/fetchData";
+
+import { setUserData } from '../features/users/userSlice';
+
+
+
 
 export const Login = () => {
     const [email, setEmail] = useState("");
@@ -9,6 +18,8 @@ export const Login = () => {
 
 
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const {user} = useSelector((state)=>state.userReducer.user)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +27,7 @@ export const Login = () => {
     const res = await loginUp({ email, password });
 
     if (res?.user) {
+      dispatch(setUserData({email, password}))
       navigate("/update");
     }
   };
@@ -46,6 +58,9 @@ export const Login = () => {
         </div>
     );
 };
+
+
+
 
 
 
