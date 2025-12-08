@@ -9,10 +9,11 @@ export const fetchGenres = createAsyncThunk("genres/fetchGenres",
             }
             const data = await res.json()
             console.log("Server answered")
-            if(!data?.name){
+            console.log(data.genres)
+            if(!data?.genres){
                 return rejectWithValue('Invalid genres JSON structure')
             }
-            return data.name
+            return data.genres
 
         }catch(err){
             return rejectWithValue(err.message || 'Unknown error');
@@ -33,7 +34,7 @@ const genresSlice = createSlice({
     },
     extraReducers: (bulder) =>{
         bulder
-        .addCase(fetchGenres.rejected, (state)=>{
+        .addCase(fetchGenres.rejected, (state, action)=>{
             state.loading = false;
             state.error = action.payload
         })
@@ -41,7 +42,7 @@ const genresSlice = createSlice({
             state.loading = true;
             state.error = null
         })
-        .addCase(fetchGenres.fulfilled, (state)=>{
+        .addCase(fetchGenres.fulfilled, (state, action)=>{
             state.loading = false
             state.genres = action.payload
         })

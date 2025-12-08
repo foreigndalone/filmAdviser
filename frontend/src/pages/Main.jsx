@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchFilms } from '../redux/filmSlice'
+import { fetchFilms } from '../features/films/filmSlice.js'
 export const Main = () => {
 
   return (

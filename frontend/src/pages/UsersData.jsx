@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router';
 
 import { useState } from 'react';
@@ -7,8 +7,10 @@ import { AgeInput } from '../components/InputWithLabel'
 
 import { addUsersData } from "../utilis/fetchData";
 
+import { fetchGenres } from '../features/genres/genresSlice';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from '../redux/userSlice';
+import { setUserData } from '../features/users/userSlice.js';
 
 
 export const UsersData = () => {
@@ -68,7 +70,11 @@ export const UsersData2 = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    
     const { user } = useSelector((state) => state.userReducer);
+    const genres = useSelector((state)=>state.genreReducer.genres)
+
 
     const handleSubmit = async(e) => {
     e.preventDefault();

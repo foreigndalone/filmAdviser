@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { fetchGenres } from "../features/genres/genresSlice";
 
 
 
@@ -31,19 +34,11 @@ export const InputWithLabel = ({ id, label, type = "text", value, setData }) => 
 
 export const GenreRadio = ({ selected, setSelected }) => {
   const [genres, setGenres] = useState([]);
+  const genresList = useSelector((state)=>state.genreReducer.genres)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const res = await fetch("http://localhost:5001/api/genres");
-        const data = await res.json();
-        setGenres(data.genres);
-      } catch (err) {
-        console.error("error fetching genres:", err);
-      }
-    };
-
-    fetchGenres();
+    dispatch(fetchGenres())
   }, []);
 
   const toggleGenre = (id) => {
@@ -56,17 +51,13 @@ export const GenreRadio = ({ selected, setSelected }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("Current selected genres:", selected);
-  }, [selected]);
-
   return (
-    <div style={{ marginBottom: "15px" }}>
+    <div>
       <h4>Choose your favorite genres</h4>
 
-      {genres.length === 0 && <p>Loading genres...</p>}
+      {genresList.length === 0 && <p>Loading genres...</p>}
 
-      {genres.map((g) => (
+      {genresList.map((g) => (
         <label key={g.id}>
           <input
             type="checkbox"
@@ -80,9 +71,6 @@ export const GenreRadio = ({ selected, setSelected }) => {
     </div>
   );
 };
-
-
-
 
 
 
